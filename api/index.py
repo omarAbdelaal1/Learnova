@@ -9,6 +9,7 @@ app = Flask(__name__)
 # ─── Config ────────────────────────────────────────────────────────────────────
 GEMINI_API_KEY        = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY")
 ZERNIO_API_KEY        = os.environ.get("ZERNIO_API_KEY", "YOUR_ZERNIO_API_KEY")
+ZERNIO_ACCOUNT_ID = os.environ.get("ZERNIO_ACCOUNT_ID", "")
 ZERNIO_WEBHOOK_SECRET = os.environ.get("ZERNIO_WEBHOOK_SECRET", "")
 GEMINI_MODEL          = "gemini-2.5-flash-lite"
 GEMINI_URL            = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
@@ -79,7 +80,10 @@ def send_whatsapp_reply(conversation_id: str, text: str):
         "Authorization": f"Bearer {ZERNIO_API_KEY}",
         "Content-Type": "application/json"
     }
-    payload = {"body": text, "type": "text"}
+    payload = {
+    "accountId": ZERNIO_ACCOUNT_ID,
+    "message": text
+    }
     try:
         resp = requests.post(url, json=payload, headers=headers, timeout=10)
         resp.raise_for_status()

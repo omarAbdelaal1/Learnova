@@ -110,7 +110,7 @@ def webhook():
     message      = data.get("message", {})
     conversation = data.get("conversation", {})
 
-    if message.get("fromMe"):
+    if message.get("direction") != "incoming":
         return jsonify({"ok": True}), 200
 
     user_text       = message.get("text", "").strip()
